@@ -1,4 +1,4 @@
-//© A+ Computer Science  -  www.apluscompsci.com
+//Å  A+ Computer Science  -  www.apluscompsci.com
 //Name -
 //Date -
 //Class -
