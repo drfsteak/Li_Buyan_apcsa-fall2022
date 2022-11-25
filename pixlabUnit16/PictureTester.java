@@ -92,6 +92,16 @@ public class PictureTester
   {
     Picture canvas = new Picture("640x480.jpg");
     canvas.createCollage();
+    Picture seagull1 = new Picture("seagull.jpg");
+    seagull1.negate();
+    canvas.copy(seagull1, 235, 325, 238, 345, 30, 20);
+    Picture seagull2 = new Picture("seagull.jpg");
+    seagull2.grayScale();
+    seagull2.mirrorDiagonal();
+    canvas.copy(seagull2, 235, 325, 238, 345, 200, 200);
+    Picture seagull3 = new Picture("seagull.jpg");
+    seagull3.zeroBlue();
+    canvas.copy(seagull3, 235, 325, 238, 345, 400, 400);
     canvas.explore();
   }
   public static void testCopy() {
