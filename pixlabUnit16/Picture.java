@@ -352,30 +352,29 @@ public void fixUnderwater() {
     this.mirrorVertical();
     this.write("collage.jpg");
   }
-  public void copy(Picture fromPic, int copyStartR, int copyEndR, int copyStartC, int copyEndC, int startRow, int startCol) {
+  public void copy(Picture fromPic, int copyStartR, int copyEndR, int copyStartC, int copyEndC, int startRow, int startCol)
+  {
 	  Pixel fromPixel = null;
 	  Pixel toPixel = null;
 	  Pixel[][] toPixels = this.getPixels2D();
 	  Pixel[][] fromPixels = fromPic.getPixels2D();
-	  Pixel[][] copyPixel= new Pixel[copyEndR-copyStartR][copyEndC-copyStartC];
-	 
-	  for(int r = copyStartR; r<copyEndR; r++) {
-		 for(int c = copyStartC; c<copyEndC; c++) {
-			 copyPixel[r-copyStartR][c-copyStartC] = fromPixels[r][c];
-		 }
-	  }
-	  for (int fromRow = 0, toRow = startRow; fromRow < fromPixels.length && toRow < toPixels.length; 
-			  fromRow++, toRow++)
+	  Pixel[][] copyFromPixels = new Pixel[copyEndR-copyStartR][copyEndC-copyStartC];
+	  for (int row = copyStartR; row < copyEndR; row++)
 	  {
-		  for (int fromCol = 0, toCol = startCol; fromCol < fromPixels[0].length && toCol < toPixels[0].length;  
-				  fromCol++, toCol++)
+		  for (int col = copyStartC; col < copyEndC; col++)
 		  {
-			  fromPixel = copyPixel[fromRow][fromCol];
+			  copyFromPixels[row-copyStartR][col-copyStartC] = fromPixels[row][col];
+		  }
+	  }
+	  for (int fromRow = 0, toRow = startRow; fromRow < copyFromPixels.length && toRow < toPixels.length; fromRow++, toRow++)
+	  {
+		  for (int fromCol = 0, toCol = startCol; fromCol < copyFromPixels[0].length && toCol < toPixels[0].length; fromCol++, toCol++)
+		  {
+			  fromPixel = copyFromPixels[fromRow][fromCol];
 			  toPixel = toPixels[toRow][toCol];
 			  toPixel.setColor(fromPixel.getColor());
 		  }
-    }   
-	  
+	  }   
   }
   
   /** Method to show large changes in color 
@@ -403,7 +402,99 @@ public void fixUnderwater() {
       }
     }
   }
+  public void edgeDetection2(int edgeDist) {
+	  Pixel leftPixel = null;
+	    Pixel rightPixel = null;
+	    Pixel[][] pixels = this.getPixels2D();
+	    Color rightColor = null;
+	    for (int row = 0; row < pixels.length; row++)
+	    {
+	      for (int col = 0; 
+	           col < pixels[0].length-1; col++)
+	      {
+	        leftPixel = pixels[row][col];
+	        rightPixel = pixels[row][col+1];
+	        rightColor = rightPixel.getColor();
+	        if (leftPixel.colorDistance(rightColor) > 
+	            edgeDist)
+	          leftPixel.setColor(Color.BLACK);
+	        else
+	          leftPixel.setColor(Color.WHITE);
+	      }
+	    }
+	    Pixel topPixel = null;
+	    Pixel bottomPixel = null;
+	    Color bottomColor = null;
+	    for(int col = 0; col<pixels[0].length; col++) {
+	    	for(int row = 0; row<pixels.length-1; row++) {
+	    		topPixel = pixels[row][col];
+	    		bottomPixel = pixels[row+1][col];
+	    		bottomColor = bottomPixel.getColor();
+	    		 if (topPixel.colorDistance(bottomColor) > 
+		            edgeDist)
+		          topPixel.setColor(Color.BLACK);
+		        
+	    	}
+	    }
+  }
   
+  public void encode(Picture messagePict)
+  {
+	  Pixel[][] messagePixels = messagePict.getPixels2D();
+	  Pixel[][] currPixels = this.getPixels2D();
+	  Pixel currPixel = null;
+	  Pixel messagePixel = null;
+	  int count = 0;
+	  for (int row = 0; row < this.getHeight(); row++)
+	  {
+		  for (int col = 0; col < this.getWidth(); col++)
+		  {
+			  // if the current pixel red is odd make it even
+			  currPixel = currPixels[row][col];
+			  if (currPixel.getRed() % 2 == 1)
+				  currPixel.setRed(currPixel.getRed() - 1);
+			  messagePixel = messagePixels[row][col];
+			  if (messagePixel.colorDistance(Color.BLACK) < 50)
+			  {
+				  currPixel.setRed(currPixel.getRed() + 1);
+				  count++;
+			  }
+		  }
+	  }
+	 
+  }
+  /**
+   * Method to decode a message hidden in the
+   * red value of the current picture
+   * @return the picture with the hidden message
+   */
+  public Picture decode()
+  {
+	  Pixel[][] pixels = this.getPixels2D();
+	  int height = this.getHeight();
+	  int width = this.getWidth();
+	  Pixel currPixel = null;
+
+	  Pixel messagePixel = null;
+	  Picture messagePicture = new Picture(height,width);
+	  Pixel[][] messagePixels = messagePicture.getPixels2D();
+	  int count = 0;
+	  for (int row = 0; row < this.getHeight(); row++)
+	  {
+		  for (int col = 0; col < this.getWidth(); col++)
+		  {
+			  currPixel = pixels[row][col];
+			  messagePixel = messagePixels[row][col];
+			  if (currPixel.getRed() % 2 == 1)
+			  {
+				  messagePixel.setColor(Color.BLACK);
+				  count++;
+			  }
+		  }
+	  }
+	  System.out.println(count);
+	  return messagePicture;
+  }
   
   /* Main method for testing - each class in Java can have a main 
    * method 
