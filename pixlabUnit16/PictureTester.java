@@ -1,11 +1,3 @@
-/**
- * This class contains class (static) methods
- * that will help you test the Picture class 
- * methods.  Uncomment the methods and the code
- * in the main to test.
- * 
- * @author Barbara Ericson 
- */
 public class PictureTester
 {
   /** Method to test zeroBlue */
@@ -88,26 +80,31 @@ public class PictureTester
 	  temple.explore();
   }
   /** Method to test the collage method */
+  
+  public static void testCopy() {
+	  Picture swan = new Picture("swan.jpg");
+	    swan.explore();
+	    Picture seagull = new Picture("seagull.jpg");
+	    swan.copy(seagull, 235, 325, 238, 345, 115, 136);
+	    swan.explore();
+  }
+  
   public static void testCollage()
   {
     Picture canvas = new Picture("640x480.jpg");
     canvas.createCollage();
-    Picture seagull1 = new Picture("seagull.jpg");
-    seagull1.negate();
-    canvas.copy(seagull1, 235, 325, 238, 345, 30, 20);
-    Picture seagull2 = new Picture("seagull.jpg");
-    seagull2.grayScale();
-    seagull2.mirrorDiagonal();
-    canvas.copy(seagull2, 235, 325, 238, 345, 200, 200);
-    Picture seagull3 = new Picture("seagull.jpg");
-    seagull3.zeroBlue();
-    canvas.copy(seagull3, 235, 325, 238, 345, 400, 400);
+    Picture snowman = new Picture("snowman.jpg");
+    snowman.keepOnlyBlue();
+    canvas.copy(snowman, 79, 157, 156, 250, 30, 20);
+    Picture snowman2 = new Picture("snowman.jpg");
+    snowman2.grayscale();
+   
+    canvas.copy(snowman2, 79, 157, 156, 250, 200, 200);
+    Picture snowman3 = new Picture("snowman.jpg");
+    snowman3.zeroBlue();
+    canvas.copy(snowman3, 79, 157, 156, 250, 30, 400);
+    canvas.mirrorVertical();
     canvas.explore();
-  }
-  public static void testCopy() {
-	  Picture swan = new Picture("seagull.jpg");
-	  swan.copy(swan, 235, 325, 238, 345, 30, 20);
-	  swan.explore();
   }
   /** Method to test edgeDetection */
   public static void testEdgeDetection()
@@ -115,6 +112,20 @@ public class PictureTester
     Picture swan = new Picture("swan.jpg");
     swan.edgeDetection(10);
     swan.explore();
+  }
+  public static void testEdgeDetection2() {
+	Picture swan = new Picture("swan.jpg");
+	swan.edgeDetection2(10);
+	swan.explore();
+  }
+  
+  public static void testEncodeAndDecode() {
+	  Picture beach = new Picture("beach.jpg");
+	  beach.explore();
+    	beach.encode(new Picture("msg.jpg"));
+	  
+	  beach.decode().explore();
+	  
   }
   
   /** Main method for testing.  Every class can have a main
@@ -138,15 +149,15 @@ public class PictureTester
    // testMirrorHorizontalBotToTop();
   //testMirrorDiagonal();
    // testMirrorTemple();
-   // testMirrorArms();
+  //  testMirrorArms();
    // testMirrorGull();
     //testMirrorDiagonal();
-   // testCollage();
+    // testCollage();
     testCopy();
     //testEdgeDetection();
-    //testEdgeDetection2();
+ //   testEdgeDetection2();
     //testChromakey();
-    //testEncodeAndDecode();
+  //testEncodeAndDecode();
     //testGetCountRedOverValue(250);
     //testSetRedToHalfValueInTopHalf();
     //testClearBlueOverValue(200);
