@@ -51,7 +51,13 @@ public class AlienHorde
 
 	public void removeDeadOnes(List<Ammo> shots)
 	{
-		
+		for(int i=0; i<aliens.size(); i++) {
+			for(Ammo ammo: shots) {
+				if((Math.abs(ammo.getX()-aliens.get(i).getX())<=13 && Math.abs(ammo.getY()-aliens.get(i).getY())<=10)) {
+					aliens.remove(i);
+				}
+			}
+		}
 	}
 
 	public String toString()
